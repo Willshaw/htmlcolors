@@ -1,4 +1,4 @@
-# HMTL Colors
+# HTML Colors
 Tool to show HTML colours with their text names and hex values
 
 I  made this tool so I can quickly grab some colors when prototyping.
