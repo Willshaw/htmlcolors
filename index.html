@@ -1,0 +1,103 @@
+<!--
+	I just made this tool so I can quickly grab some colors when prototyping.
+
+	Feel free to edit/improve it... like getting rid of all those refernces to 
+	DIV and using a proper class.
+
+	Also I'm English, it's very hard to write color and not colour, but I wanted
+	to be consistent - so color it is.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		html, body {
+			background-color: darkgrey;
+			font-family: sans-serif;
+		}
+
+		div {
+			float:left;
+			border: thick solid white;
+			margin: 1em;
+			padding: 2em;
+			border-radius: 15px;
+			text-align: center;
+		}
+
+		span {display: block;}
+	</style>
+</head>
+<body>
+	<script>
+		// specify colors to output
+		var colors = ['AliceBlue','AntiqueWhite','Aqua','Aquamarine','Azure','Beige','Bisque','Black','BlanchedAlmond','Blue','BlueViolet','Brown','BurlyWood','CadetBlue','Chartreuse','Chocolate','Coral','CornflowerBlue','Cornsilk','Crimson','Cyan','DarkBlue','DarkCyan','DarkGoldenRod','DarkGray','DarkGreen','DarkKhaki','DarkMagenta','DarkOliveGreen','DarkOrange','DarkOrchid','DarkRed','DarkSalmon','DarkSeaGreen','DarkSlateBlue','DarkSlateGray','DarkTurquoise','DarkViolet','DeepPink','DeepSkyBlue','DimGray','DodgerBlue','FireBrick','FloralWhite','ForestGreen','Fuchsia','Gainsboro','GhostWhite','Gold','GoldenRod','Gray','Green','GreenYellow','HoneyDew','HotPink','IndianRed','Indigo','Ivory','Khaki','Lavender','LavenderBlush','LawnGreen','LemonChiffon','LightBlue','LightCoral','LightCyan','LightGoldenRodYellow','LightGray','LightGreen','LightPink','LightSalmon','LightSeaGreen','LightSkyBlue','LightSlateGray','LightSteelBlue','LightYellow','Lime','LimeGreen','Linen','Magenta','Maroon','MediumAquaMarine','MediumBlue','MediumOrchid','MediumPurple','MediumSeaGreen','MediumSlateBlue','MediumSpringGreen','MediumTurquoise','MediumVioletRed','MidnightBlue','MintCream','MistyRose','Moccasin','NavajoWhite','Navy','OldLace','Olive','OliveDrab','Orange','OrangeRed','Orchid','PaleGoldenRod','PaleGreen','PaleTurquoise','PaleVioletRed','PapayaWhip','PeachPuff','Peru','Pink','Plum','PowderBlue','Purple','RebeccaPurple','Red','RosyBrown','RoyalBlue','SaddleBrown','Salmon','SandyBrown','SeaGreen','SeaShell','Sienna','Silver','SkyBlue','SlateBlue','SlateGray','Snow','SpringGreen','SteelBlue','Tan','Teal','Thistle','Tomato','Turquoise','Violet','Wheat','White','WhiteSmoke','Yellow','YellowGreen'],
+			cntColor = colors.length;
+
+		// add a div, with the correct background color for each one
+		for( var c = 0; c <= cntColor; c++ ) {
+			var color = colors[ c ];
+
+			document.body.innerHTML += '<div style="background-color: ' + color + '"><span>' + color + '</span></div>';
+		}
+
+		// adjust the text colours
+		// this function will change the text color to something with a compatible
+		// contrast to the background color of a DIV
+		(function lightenTextColor() {
+
+			// get all divs and the count
+			var divs = document.getElementsByTagName('div'),
+				cnt = divs.length,
+				// threshold value to switch from black to white text
+				threshold = 128;
+			
+			// loop over, set the text color to something appropriate
+			for( var d = 0; d < cnt; d++ ) {
+				// get div
+				var div = divs[ d ],
+					// get computed style to ensure it aint a word
+					// simple ones come back as red, blue, teal etc
+					style = document.defaultView.getComputedStyle( div );
+					// make it a lovely little array (be there a better way?!)
+					rgb = style.backgroundColor
+									.replace( 'rgb(', '' )
+									.replace(')','')
+									.replace(' ','')
+									.split( ','),
+					// get ready to make the hex string for LoLz 'n' ting				
+					hex = '',
+					// I'll be wanting the average of the rgb to compare
+					// against the threshold - rough estimation of lightness
+					avg = 0,
+					cntColor = rgb.length;
+
+				// loop over the Color, add em up...
+				for( var c = 0; c < cntColor; c++ ) {
+					var intValue = parseInt( rgb[ c ] ),
+						hexValue = intValue.toString(16);
+
+					if( hexValue < 10 ) {
+						hexValue = '0' + hexValue;
+					}
+
+					avg += intValue;
+					hex += hexValue;
+				}
+
+				// ...and work out the average!
+				avg = avg / 3;
+
+				// ...also add the hex value to the inner span
+				div.firstChild.innerHTML += '<br />#' + hex;
+
+				// change the text color to white if it's a dark bg-color
+				if( avg < threshold ) {
+					div.style.color = 'white';
+				}		
+			}
+		})();
+
+	</script>
+</body>
+</html>
